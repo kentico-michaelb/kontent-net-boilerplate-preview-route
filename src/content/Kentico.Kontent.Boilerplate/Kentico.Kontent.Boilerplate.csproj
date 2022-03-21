@@ -20,6 +20,10 @@
     <NuspecFile>$(MSBuildThisFileDirectory)..\..\Template.nuspec</NuspecFile>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Tools\GenerateModels.ps1" />
+    <None Remove="Tools\GenerateModels.sh" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="IISUrlRewrite.xml" />
@@ -30,6 +34,10 @@
     <PackageReference Include="Kentico.Kontent.Delivery" Version="14.0.1" />
     <PackageReference Include="Kentico.Kontent.Delivery.Caching" Version="14.0.1" />
     <PackageReference Include="SimpleMvcSitemap" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Tools\" />
   </ItemGroup>
 
   <Target Name="GenerateModels" BeforeTargets="BeforeBuild;BeforeRebuild">

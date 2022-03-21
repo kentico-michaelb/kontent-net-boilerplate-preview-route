@@ -36,15 +36,16 @@ namespace Kentico.Kontent.Boilerplate
 
             services.AddSingleton<ITypeProvider, CustomTypeProvider>();
             services.AddSingleton<IContentLinkUrlResolver, CustomContentLinkUrlResolver>();
+            services.AddDeliveryInlineContentItemsResolver<Tweet, TweetResolver>();
             services.AddDeliveryClient(Configuration);
 
-            // Use cached client decorator
-            services.AddDeliveryClientCache(new DeliveryCacheOptions()
-            {
-                StaleContentExpiration = TimeSpan.FromSeconds(2),
-                DefaultExpiration = TimeSpan.FromMinutes(24),
-                CacheType = CacheTypeEnum.Memory
-            });
+            //// Use cached client decorator
+            //services.AddDeliveryClientCache(new DeliveryCacheOptions()
+            //{
+            //    StaleContentExpiration = TimeSpan.FromSeconds(2),
+            //    DefaultExpiration = TimeSpan.FromMinutes(24),
+            //    CacheType = CacheTypeEnum.Memory
+            //});
 
             services.AddControllersWithViews();
         }
@@ -73,22 +74,22 @@ namespace Kentico.Kontent.Boilerplate
             app.UseStaticFiles();
 
             // Register webhook-based cache invalidation controller
-            app.UseWebhookSignatureValidator(context => context.Request.Path.StartsWithSegments("/webhooks/webhooks", StringComparison.OrdinalIgnoreCase), Configuration.GetSection(nameof(WebhookOptions)));
+            //app.UseWebhookSignatureValidator(context => context.Request.Path.StartsWithSegments("/webhooks/webhooks", StringComparison.OrdinalIgnoreCase), Configuration.GetSection(nameof(WebhookOptions)));
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "areas",
-                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{routeController}/{routeAction=Index}/{urlSlug?}");
 
                 endpoints.MapControllerRoute(
                     name: "sitemap",
                     defaults: new { controller = "Sitemap", action = "Index" },
                     pattern: "sitemap.xml");
 
-                endpoints.MapControllerRoute(
+            endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{urlSlug?}");
             });
         }
     }
